@@ -8,50 +8,49 @@ import wandb
 import pandas as pd
 
 def go(input_artifact, output_artifact, output_type, output_description, min_price, max_price, sample):
-    with mlflow.start_run():
-        # Initialize wandb run
-        run = wandb.init(project="nyc_airbnb", job_type="basic_cleaning")
+         # Initialize wandb run
+    run = wandb.init(project="nyc_airbnb", job_type="basic_cleaning")
 
         # Download the input artifact
-        artifact = run.use_artifact(input_artifact, type='raw_data')
-        local_path = artifact.download()
+    artifact = run.use_artifact(input_artifact, type='raw_data')
+    local_path = artifact.download()
 
         # Determine file path to load
-        if sample:
-            local_file = os.path.join(local_path, sample)
-        else:
-            local_file = os.path.join(local_path, os.listdir(local_path)[0])  # default: first file
+    if sample:
+        local_file = os.path.join(local_path, sample)
+    else:
+        local_file = os.path.join(local_path, os.listdir(local_path)[0])  # default: first file
 
-        print(f"Downloaded input artifact to: {local_file}")
+    print(f"Downloaded input artifact to: {local_file}")
 
         # Read and clean the data
-        df = pd.read_csv(local_file)
+    df = pd.read_csv(local_file)
 
         # Filter by price
-        idx = df['price'].between(min_price, max_price)
-        df = df[idx].copy()
+    idx = df['price'].between(min_price, max_price)
+    df = df[idx].copy()
 
         # Filter by longitude and latitude
-        idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
-        df = df[idx].copy()
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
 
         # Save cleaned data locally
-        output_path = os.path.join(os.getcwd(), output_artifact)
-        df.to_csv(output_path, index=False)
+    output_path = os.path.join(os.getcwd(), output_artifact)
+    df.to_csv(output_path, index=False)
 
         # Log with mlflow (optional)
-        mlflow.log_artifact(output_path, artifact_path=output_type)
+    mlflow.log_artifact(output_path, artifact_path=output_type)
 
         # Log to wandb as new artifact
-        cleaned_artifact = wandb.Artifact(
-            name=output_artifact,
-            type=output_type,
-            description=output_description
+    cleaned_artifact = wandb.Artifact(
+        name=output_artifact,
+        type=output_type,
+        description=output_description
         )
-        cleaned_artifact.add_file(output_path)
-        run.log_artifact(cleaned_artifact)
+    cleaned_artifact.add_file(output_path)
+    run.log_artifact(cleaned_artifact)
 
-        print(f"Data cleaned and saved to: {output_path}")
+    print(f"Data cleaned and saved to: {output_path}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Clean Airbnb data")
