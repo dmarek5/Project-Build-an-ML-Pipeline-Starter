@@ -104,7 +104,7 @@ def go(config: DictConfig):
                 os.path.join(hydra.utils.get_original_cwd(), "src", "train_random_forest"),
                 env_manager="conda",
                 parameters={
-                    "trainval_artifact": "nyc_airbnb/trainval_data.csv:v0",
+                    "trainval_artifact": "nyc_airbnb/trainval_data.csv:latest",
                     "val_size": config["modeling"]["val_size"],
                     "random_seed": config["modeling"]["random_seed"],
                     "stratify_by": config["modeling"]["stratify_by"],
@@ -121,7 +121,7 @@ def go(config: DictConfig):
                 env_manager="conda",
                 parameters={
                     "mlflow_model": "random_forest_export:prod",
-                    "test_dataset": "nyc_airbnb/test_data.csv:v0",
+                    "test_dataset": "nyc_airbnb/test_data.csv:latest",
                 }
             )
 
