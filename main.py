@@ -55,8 +55,8 @@ def go(config: DictConfig):
                 "main",
                 env_manager="conda",
                 parameters={
-                    "input_artifact": "sample.csv",
-                    "output_artifact": "cleaned_sample.csv",
+                    "input_artifact": "nyc_airbnb/sample.csv:v1",
+                    "output_artifact": "nyc_airbnb/cleaned_sample.csv:v0",
                     "output_type":"cleaned_sample",
                     "output_description": "clean_sample",
                     "min_price": config["etl"]["min_price"],
