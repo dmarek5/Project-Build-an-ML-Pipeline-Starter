@@ -55,8 +55,11 @@ def go(config: DictConfig):
                 "main",
                 env_manager="conda",
                 parameters={
-                    "input": "sample.csv",
-                    "output": "cleaned_sample.csv"
+                    "input_artifact": "sample.csv",
+                    "output_artifact": "cleaned_sample.csv",
+                    "output_type":"cleaned_sample",
+                    "min_price": config["etl"]["min_price"],
+                    "max_price": config["etl"]["max_price"]
                 }
             )
             pass
